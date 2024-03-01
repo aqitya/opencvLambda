@@ -1,10 +1,19 @@
 import json
 import cv2
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    request = json.loads(event['Body'])
-    image_url = request['image_url']
-    image = cv2.imread(image_url, 1)
-    resized = cv2.resize(image, (0, 0), fx = 0.1, fy = 0.1)
-    # do something with resized image
+    logger.info("Received event: " + json.dumps(event))
+    request_body = event.get('body')  # Note the lowercase 'b'
+    if request_body is not None:
+        data = json.loads(request_body)
+        # Process the data
+        return {"statusCode": 200, "body": json.dumps({"message": "Success"})}
+    else:
+        return {"statusCode": 400, "body": json.dumps({"message": "Request body is missing"})}
+
     return "Success"
+
